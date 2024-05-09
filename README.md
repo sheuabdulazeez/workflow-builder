@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Node Explanation
 
-## Getting Started
+Every node needs to take in the same params structure. 
 
-First, run the development server:
+#### Node Choices
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+When seniding a request for choices, we neeed to send a structure like below:  Gotten from Zapier
+
+```json
+{
+  "node": "gmail",
+  "authenticationId": 45309606,
+  "params": {
+    "body_type": "html",
+    "to": ["hewhke"],
+    "body": "",
+    "file": [],
+    "cc": ["wel"]
+  },
+  "field": "from",
+  "page": 0,
+  "workflowId": "jn748r81zjpd964xhwt4mwtbb16rpdaa",
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Todo Day 7
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Add Events to the node description (Gmail, Sheet, Webhook, Client, Task)
+- Get the Node to the frontend with filtering based on the node type (trigger | action)
+- Map out the structure for the workflow database. Sample:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+  ```json
 
-## Learn More
+  {
+      nodes: [{
+          id: "",
+          type: "trigger",
+          data: {
+              api: "gmail",
+              event: "sendEmail",
+              authenticationId: "",
+              params: {}
+          }
+      }],
+      connections: [],
+      title: "",
+      active: true
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+  }
+  ```
+- Add the plus button to the node on the frontend so we can add more nodes

@@ -1,5 +1,5 @@
 import { Mail } from "lucide-react";
-import { INodeDescription, INodeType } from "../../interface";
+import { INodeType } from "../../interface";
 
 class Gmail implements INodeType {
     description = {
@@ -7,6 +7,14 @@ class Gmail implements INodeType {
         name: "gmail",
         icon: Mail
     };
+
+    methods = {
+        loadOptions: {
+            async getFromEmails(arg: any){
+                return []
+            }
+        }
+    }
 }
 
 export default Gmail
