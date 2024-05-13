@@ -20,23 +20,12 @@ import {
 import NodeSettings from "./NodeSettings";
 import NodeElement from "./NodeElement";
 import useNodeSettings from "./store/node-settings";
+import useWorkflow from "./store/workflow";
 
-const initialNodes:  Node[] = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "Catch All Webhook", description: "Catch all POST,GET,PUT,DELETE Hooks" }, type: "trigger" },
-  { id: "2", position: { x: 0, y: 200 }, data: { label: "Send an Email in Gmail", description: "Send an email using Gmail" }, type: "action" },
-];
-
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function WorkflowEditor() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { nodes, connections } = useWorkflow(state => ({ nodes: state.nodes, connections: state.conections }));
   const panelRef = useRef<null>(null)
-
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
-  );
 
   const nodeTypes = useMemo(() => ({
     trigger: NodeElement,
@@ -50,10 +39,9 @@ export default function WorkflowEditor() {
       <ResizablePanel ref={panelRef}>
         <ReactFlow
           nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
+          edges={connections}
+          
+          // onConnect={onConnect}
           nodeTypes={nodeTypes}
           nodesDraggable={false}
           nodesConnectable={false}
