@@ -1,11 +1,26 @@
 import { WebhookIcon } from "lucide-react";
-import { INodeType } from "../interface";
+import { EventType, INodeDescription, INodeType } from "../interface";
+import { GoogleAuthentication } from "../../authentications/google.authentication";
 
 class Webhook implements INodeType {
-    description = {
+    static description: INodeDescription = {
         displayName: "Webhook",
-        name: "wehbook",
-        icon: WebhookIcon
+        name: "webhook",
+        icon: WebhookIcon,
+        events: [
+            {
+                displayName: "Catch Wehbook",
+                name: "catch_wehbook",
+                type: EventType.trigger,
+                description: "Wait for a new GET, POST, PUT to a Webhook URL"
+            },
+            {
+                displayName: "Send a webhook",
+                name: "send_wehbook",
+                type: EventType.action,
+                description: "Wait for a new GET, POST, PUT to a Webhook URL"
+            }
+        ],
     };
 }
 

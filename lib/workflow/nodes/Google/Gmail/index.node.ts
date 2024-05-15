@@ -1,11 +1,31 @@
 import { Mail } from "lucide-react";
-import { INodeType } from "../../interface";
+import { EventType, INodeDescription, INodeType } from "../../interface";
 
 class Gmail implements INodeType {
-    description = {
+    static description: INodeDescription = {
         displayName: "Gmail",
         name: "gmail",
-        icon: Mail
+        icon: Mail,
+        events: [
+            {
+                displayName: "Send Email",
+                name: "send_email",
+                type: EventType.action,
+                description: "Create and send a new email",
+            },
+            {
+                displayName: "Reply to Email",
+                name: "reply_email",
+                type: EventType.action,
+                description: "Send a reply to an email"
+            },
+            {
+                displayName: "Create Draft",
+                name: "create_draft",
+                type: EventType.action,
+                description: "Create but do not send a new email"
+            }
+        ]
     };
 
     methods = {
@@ -15,6 +35,11 @@ class Gmail implements INodeType {
             }
         }
     }
+
+
+
+
+
 }
 
 export default Gmail

@@ -48,10 +48,11 @@ function Navbar() {
           <Package2 className="h-6 w-6" />
           <span className="sr-only">Acme Inc</span>
         </Link>
-        {navLinks.map((navLink) => (
+        {navLinks.map((navLink, index) => (
           <Link
             href={navLink.link}
             className="text-muted-foreground transition-colors hover:text-foreground"
+            key={index}
           >
             {navLink.title}
           </Link>

@@ -1,13 +1,20 @@
 import { IconJarLogoIcon } from "@radix-ui/react-icons";
 import { Icon } from "lucide-react";
 
+export enum EventType {
+  trigger,
+  action
+}
+
 export interface Option {
   label: string;
   value: string;
+  icon?: typeof Icon,
+  description?: string
 }
 
 export interface INodeType {
-  readonly description: INodeDescription;
+  readonly description?: INodeDescription;
   methods?: {
     loadOptions?: { [key: string]: (...args: any) => Promise<Option[]> };
   };
@@ -35,7 +42,7 @@ export interface INodeDescription {
 export interface INodeDescriptionEvent {
   displayName: string;
   name: string;
-  type: "trigger" | "action";
+  type: EventType;
   description: string;
 }
 

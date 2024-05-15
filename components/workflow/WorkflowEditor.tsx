@@ -1,4 +1,11 @@
-import { ReactNode, RefObject, useCallback, useMemo, useRef, useState } from "react";
+import {
+  ReactNode,
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -19,20 +26,23 @@ import {
 } from "@/components/ui/resizable";
 import NodeSettings from "./NodeSettings";
 import NodeElement from "./NodeElement";
-import useNodeSettings from "./store/node-settings";
 import useWorkflow from "./store/workflow";
 
-
 export default function WorkflowEditor() {
-  const { nodes, connections } = useWorkflow(state => ({ nodes: state.nodes, connections: state.conections }));
-  const panelRef = useRef<null>(null)
+  const { nodes, connections, selectedNode } = useWorkflow((state) => ({
+    nodes: state.nodes,
+    connections: state.conections,
+    selectedNode: state.selectedNode,
+  }));
+  const panelRef = useRef<null>(null);
 
-  const nodeTypes = useMemo(() => ({
-    trigger: NodeElement,
-    action: NodeElement,
-  }), []);
-
-  const showNodeSettings = useNodeSettings(state => state.show);
+  const nodeTypes = useMemo(
+    () => ({
+      trigger: NodeElement,
+      action: NodeElement,
+    }),
+    []
+  );
 
   return (
     <ResizablePanelGroup direction="horizontal" className="bg-white">
@@ -40,7 +50,6 @@ export default function WorkflowEditor() {
         <ReactFlow
           nodes={nodes}
           edges={connections}
-          
           // onConnect={onConnect}
           nodeTypes={nodeTypes}
           nodesDraggable={false}
@@ -52,9 +61,11 @@ export default function WorkflowEditor() {
         </ReactFlow>
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel minSize={25} maxSize={30} defaultSize={25} className={`${!showNodeSettings ? "hidden": ""}`}>
-        <NodeSettings />
-      </ResizablePanel>
+      {selectedNode && (
+        <ResizablePanel minSize={25} maxSize={30} defaultSize={25}>
+          <NodeSettings />
+        </ResizablePanel>
+      )}
     </ResizablePanelGroup>
   );
 }

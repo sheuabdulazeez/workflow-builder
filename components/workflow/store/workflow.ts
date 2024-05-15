@@ -1,14 +1,28 @@
-import { Edge, Node } from "reactflow";
+import { Edge, Node, NodeProps } from "reactflow";
 import { create } from "zustand";
 import { v4 as uuid } from "uuid";
+import { Nodes } from "@/lib/workflow/nodes";
+import {
+  EventType,
+  INodeDescription,
+  Option,
+} from "@/lib/workflow/nodes/interface";
 
 type Workflow = {
+  availableNodes: INodeDescription[];
+  selectedNode: null | NodeProps;
   nodes: Node[];
   conections: Edge[];
   addNode: (prevNodeId: string) => void;
+  getAppOptions: (type: EventType) => Option[];
+  getAppEventOptions: (app: string) => Option[];
+  setSelectedNode: (node: NodeProps | null) => void;
+  updateNodeData: (data: NodeProps["data"]) => void;
 };
 
 const useWorkflow = create<Workflow>((set, get) => ({
+  availableNodes: Nodes,
+  selectedNode: null,
   nodes: [
     {
       id: "1",
@@ -63,6 +77,42 @@ const useWorkflow = create<Workflow>((set, get) => ({
 
     set((state) => ({ nodes: [...state.nodes, newNode] }));
     set((state) => ({ conections: [...state.conections, newEdge] }));
+  },
+  setSelectedNode(node) {
+    set({ selectedNode: node });
+  },
+  getAppOptions(type) {
+    return get()
+      .availableNodes.filter(
+        (node) => node.events?.filter((ev) => ev.type === type).length
+      )
+      .map((app) => ({ label: app.displayName, value: app.name }));
+  },
+  getAppEventOptions(app) {
+    const eventType = get().selectedNode?.type;
+    return (
+      get()
+        .availableNodes.find((node) => node.name === app)
+        ?.events?.filter((e) => e.type === (eventType as any))
+        .map((event) => ({ label: event.displayName, value: event.name })) ?? []
+    );
+  },
+  updateNodeData(data) {
+    set((state) => ({
+      selectedNode: state.selectedNode
+        ? {
+            ...state.selectedNode,
+            data: { ...state.selectedNode?.data, ...data },
+          }
+        : null,
+    }));
+    set((state) => ({
+      nodes: state.nodes.map((n) =>
+        n.id === state.selectedNode?.id
+          ? { ...n, data: { ...n.data, ...data } }
+          : n
+      ),
+    }));
   },
 }));
 

@@ -19,5 +19,23 @@ export default defineSchema({
     ownerId: v.string(),
     title: v.string(),
     active: v.boolean(),
+    nodes: v.array(v.object({
+      id: v.string(),
+      type: v.string(),
+      position: v.object({ x: v.number(), y: v.number() }),
+      data: v.object({
+        label: v.string(),
+        description: v.string(),
+        api: v.string(),
+        event: v.string(),
+        authenticationid: v.string(),
+        params: v.any()
+      })
+    })),
+    connections: v.array(v.object({
+      id: v.string(),
+      source: v.string(),
+      target: v.string()
+    }))
   })
 });

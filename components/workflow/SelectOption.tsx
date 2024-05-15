@@ -17,7 +17,7 @@ type Props = {
   options: Option[];
   defaultValue?: string;
   placeholder: string;
-  onChange?: (option: Option) => void;
+  onChange: (option: Option) => void;
 };
 
 export default function SelectOption({
@@ -55,6 +55,7 @@ export default function SelectOption({
                 key={option.value}
                 value={option.value}
                 onSelect={(currentValue) => {
+                  onChange(option)
                   setValue(currentValue);
                   setOpen(false);
                 }}
