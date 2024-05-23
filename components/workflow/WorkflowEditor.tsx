@@ -29,10 +29,11 @@ import NodeElement from "./NodeElement";
 import useWorkflow from "./store/workflow";
 
 export default function WorkflowEditor() {
-  const { nodes, connections, selectedNode } = useWorkflow((state) => ({
+  const { nodes, connections, selectedNode, onNodesChange } = useWorkflow((state) => ({
     nodes: state.nodes,
-    connections: state.conections,
+    connections: state.connections,
     selectedNode: state.selectedNode,
+    onNodesChange: state.onNodesChange
   }));
   const panelRef = useRef<null>(null);
 
@@ -51,6 +52,7 @@ export default function WorkflowEditor() {
           nodes={nodes}
           edges={connections}
           // onConnect={onConnect}
+          onNodesChange={onNodesChange}
           nodeTypes={nodeTypes}
           nodesDraggable={false}
           nodesConnectable={false}

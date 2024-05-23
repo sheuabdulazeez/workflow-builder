@@ -1,5 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import {v4} from "uuid"
+import schema from "./schema";
 
 export const getWorkflows = query({
   args: { ownerId: v.string() },
@@ -35,7 +37,33 @@ export const addWorkflow = mutation({
       title,
       active: false,
       ownerId,
+      nodes: [
+        {
+          id: `node-${v4()}`,
+          position: { x: 0, y: 0 },
+          data: {
+            label: "Trigger",
+          },
+          type: "trigger",
+        }
+      ]
     });
+    return workflow;
+  },
+});
+
+export const updateWorkflow = mutation({
+  args: {
+    id: v.id("workflows"),
+    title: v.string(),
+    nodes: v.array(v.any()),
+    connections: v.array(v.any()),
+    active: v.boolean()
+  },
+  async handler(ctx, { id, title, nodes, connections, active }) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) throw new Error("Not authenticated");
+    const workflow = await ctx.db.patch(id, {nodes, connections, title, active})
     return workflow;
   },
 });

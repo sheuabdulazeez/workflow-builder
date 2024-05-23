@@ -25,7 +25,12 @@ class Gmail implements INodeType {
                 type: EventType.action,
                 description: "Create but do not send a new email"
             }
-        ]
+        ],
+        authentication: {
+            displayName: "Gmail",
+            name: "google",
+            type: "oauth"
+        }
     };
 
     methods = {

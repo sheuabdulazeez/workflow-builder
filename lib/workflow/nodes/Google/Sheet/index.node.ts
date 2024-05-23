@@ -19,7 +19,12 @@ class Sheet implements INodeType {
                 type: EventType.action,
                 description: "Create a blank worksheet with title"
             }
-        ]
+        ],
+        authentication: {
+            name: "google",
+            type: "oauth",
+            displayName: "Sheet"
+        }
     };
 }
 

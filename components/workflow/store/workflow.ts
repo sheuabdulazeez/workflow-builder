@@ -1,4 +1,4 @@
-import { Edge, Node, NodeProps } from "reactflow";
+import { Edge, Node, NodeChange, NodeProps } from "reactflow";
 import { create } from "zustand";
 import { v4 as uuid } from "uuid";
 import { Nodes } from "@/lib/workflow/nodes";
@@ -7,48 +7,54 @@ import {
   INodeDescription,
   Option,
 } from "@/lib/workflow/nodes/interface";
+import { Id } from "@/convex/_generated/dataModel";
+
+interface IWorkflow {
+  id?: Id<"workflows"> | null;
+  title?: string;
+  active?: boolean;
+  nodes?: Node[];
+  connections?: Edge[];
+}
 
 type Workflow = {
+  id?: Id<"workflows"> | null;
+  title: string;
+  active: boolean;
   availableNodes: INodeDescription[];
   selectedNode: null | NodeProps;
   nodes: Node[];
-  conections: Edge[];
+  connections: Edge[];
   addNode: (prevNodeId: string) => void;
   getAppOptions: (type: EventType) => Option[];
   getAppEventOptions: (app: string) => Option[];
   setSelectedNode: (node: NodeProps | null) => void;
   updateNodeData: (data: NodeProps["data"]) => void;
+  onNodesChange: (props: NodeChange[]) => void;
+  updateWorkflow: (data: IWorkflow) => void;
+  getNodeInfo: (name: string) => INodeDescription|undefined
 };
 
 const useWorkflow = create<Workflow>((set, get) => ({
+  title: "",
+  active: false,
   availableNodes: Nodes,
   selectedNode: null,
-  nodes: [
-    {
-      id: "1",
-      position: { x: 0, y: 0 },
-      data: {
-        label: "Catch All Webhook",
-        description: "Catch all POST,GET,PUT,DELETE Hooks",
-      },
-      type: "trigger",
-    },
-    //   { id: "2", position: { x: 0, y: 150 }, data: { label: "Send an Email /in Gmail", description: "Send an email using Gmail" }, type: "action" },
-  ],
-  conections: [{ id: "con-1", source: "1", target: "2" }],
+  nodes: [],
+  connections: [],
   addNode(prevNodeId) {
     const prevNode = get().nodes.find((node) => node.id === prevNodeId)!;
     const nodeLength = get().nodes.length;
-    const prevCon = get().conections.find((con) => con.source === prevNodeId);
+    const prevCon = get().connections.find((con) => con.source === prevNodeId);
 
     const newNode: Node = {
       id: `node-${uuid()}`,
       position: {
         x: prevNode.position.x,
-        y: prevNode.position.y + (nodeLength > 1 ? 180 : 150),
+        y: prevNode.position.y + prevNode.height!,
       },
       data: {
-        label: `Action ${uuid()}`,
+        label: `Action`,
         description: "Add an action to be performed",
       },
       type: "action",
@@ -61,22 +67,22 @@ const useWorkflow = create<Workflow>((set, get) => ({
     };
 
     if (prevCon) {
-      const newNodes = [...get().nodes, newNode].map((n) =>
+      const newNodes = get().nodes.map((n) =>
         prevNode.position.y < n.position.y
-          ? { ...n, position: { x: 0, y: n.position.y + 150 } }
+          ? { ...n, position: { x: 0, y: n.position.y + 180 } }
           : n
       );
-      const newConnections = [...get().conections, newEdge].map((con) =>
+      const newConnections = get().connections.map((con) =>
         con.id === prevCon.id ? { ...con, source: newNode.id } : con
       );
 
-      set({ conections: newConnections });
-      set({ nodes: newNodes });
+      set({ connections: [...newConnections, newEdge] });
+      set({ nodes: [...newNodes, newNode] });
       return;
     }
 
     set((state) => ({ nodes: [...state.nodes, newNode] }));
-    set((state) => ({ conections: [...state.conections, newEdge] }));
+    set((state) => ({ connections: [...state.connections, newEdge] }));
   },
   setSelectedNode(node) {
     set({ selectedNode: node });
@@ -114,6 +120,41 @@ const useWorkflow = create<Workflow>((set, get) => ({
       ),
     }));
   },
+  onNodesChange(nodesChanges) {
+    nodesChanges.forEach((nChanges) => {
+      switch (nChanges.type) {
+        case "dimensions":
+          set((state) => ({
+            nodes: state.nodes.map((n) =>
+              n.id === nChanges.id ? { ...n, ...nChanges.dimensions } : n
+            ),
+          }));
+          break;
+        case "position":
+          set((state) => ({
+            nodes: state.nodes.map((n) =>
+              n.id === nChanges.id
+                ? {
+                    ...n,
+                    position: nChanges.position!,
+                    positionAbsolute: nChanges.positionAbsolute,
+                  }
+                : n
+            ),
+          }));
+          break;
+        default:
+          break;
+      }
+    });
+  },
+  updateWorkflow(workflowData) {
+    console.log(workflowData.connections);
+    set((state) => ({ ...state, ...workflowData }));
+  },
+  getNodeInfo(name){
+    return get().availableNodes.find(n => n.name === name);
+  }
 }));
 
 export default useWorkflow;

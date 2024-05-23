@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as authentication from "../authentication.js";
 import type * as clients from "../clients.js";
 import type * as tasks from "../tasks.js";
 import type * as workflows from "../workflows.js";
@@ -27,6 +28,7 @@ import type * as workflows from "../workflows.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  authentication: typeof authentication;
   clients: typeof clients;
   tasks: typeof tasks;
   workflows: typeof workflows;

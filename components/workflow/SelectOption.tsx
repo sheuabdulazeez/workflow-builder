@@ -27,7 +27,6 @@ export default function SelectOption({
   placeholder,
 }: Props) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(defaultValue ?? "");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -39,8 +38,8 @@ export default function SelectOption({
           className="justify-between"
           type="button"
         >
-          {value
-            ? options.find((option) => option.value === value)?.label
+          {defaultValue
+            ? options.find((option) => option.value === defaultValue)?.label
             : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -56,14 +55,13 @@ export default function SelectOption({
                 value={option.value}
                 onSelect={(currentValue) => {
                   onChange(option)
-                  setValue(currentValue);
                   setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === option.value ? "opacity-100" : "opacity-0"
+                    defaultValue === option.value ? "opacity-100" : "opacity-0"
                   )}
                 />
                 {option.label}

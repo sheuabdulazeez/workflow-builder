@@ -6,36 +6,52 @@ export default defineSchema({
     ownerId: v.string(),
     title: v.string(),
     status: v.string(),
-    priority: v.string()
+    priority: v.string(),
   }),
   clients: defineTable({
     ownerId: v.string(),
     name: v.string(),
     email: v.string(),
     type: v.string(),
-    status: v.string()
+    status: v.string(),
+  }),
+  authentications: defineTable({
+    token: v.any(),
+    expired: v.boolean(),
+    node: v.string(),
+    name: v.string(),
+    accountName: v.string(),
+    ownerId: v.string(),
   }),
   workflows: defineTable({
     ownerId: v.string(),
     title: v.string(),
     active: v.boolean(),
-    nodes: v.array(v.object({
-      id: v.string(),
-      type: v.string(),
-      position: v.object({ x: v.number(), y: v.number() }),
-      data: v.object({
-        label: v.string(),
-        description: v.string(),
-        api: v.string(),
-        event: v.string(),
-        authenticationid: v.string(),
-        params: v.any()
+    nodes: v.optional(v.array(
+      v.object({
+        id: v.string(),
+        type: v.string(),
+        position: v.object({ x: v.number(), y: v.number() }),
+        height: v.optional(v.number()),
+        width: v.optional(v.number()),
+        data: v.object({
+          label: v.string(),
+          description: v.optional(v.string()),
+          api: v.optional(v.string()),
+          event: v.optional(v.string()),
+          authenticationId: v.optional(v.union(v.string(), v.null())),
+          params: v.optional(v.any()),
+        }),
       })
-    })),
-    connections: v.array(v.object({
-      id: v.string(),
-      source: v.string(),
-      target: v.string()
-    }))
-  })
+    )),
+    connections: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          source: v.string(),
+          target: v.string(),
+        })
+      )
+    ),
+  }),
 });

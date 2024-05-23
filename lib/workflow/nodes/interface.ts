@@ -1,5 +1,5 @@
 import { IconJarLogoIcon } from "@radix-ui/react-icons";
-import { Icon } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export enum EventType {
   trigger,
@@ -9,7 +9,7 @@ export enum EventType {
 export interface Option {
   label: string;
   value: string;
-  icon?: typeof Icon,
+  icon?: typeof IconJarLogoIcon | typeof Mail;
   description?: string
 }
 
@@ -29,7 +29,7 @@ export interface INodeType {
 export interface INodeDescription {
   displayName: string;
   name: string;
-  icon: typeof IconJarLogoIcon | typeof Icon;
+  icon: typeof IconJarLogoIcon | typeof Mail;
   events?: INodeDescriptionEvent[];
   authentication?: {
     displayName: string;
