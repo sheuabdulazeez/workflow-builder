@@ -32,7 +32,7 @@ function WorkflowHeader() {
   }
 
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 justify-between">
+    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 justify-between z-40">
       <nav className="text-lg font-medium flex flex-row items-center gap-10 w-100">
         <div className="flex items-center gap-2 text-lg font-semibold md:text-base">
           <Input defaultValue={workflow.title} onChange={e => workflow.updateWorkflow({title: e.target.value})}/>

@@ -108,14 +108,14 @@ const useWorkflow = create<Workflow>((set, get) => ({
       selectedNode: state.selectedNode
         ? {
             ...state.selectedNode,
-            data: { ...state.selectedNode?.data, ...data },
+            data: { ...state.selectedNode?.data, ...data, params: {...state.selectedNode.data.params, ...data.params} },
           }
         : null,
     }));
     set((state) => ({
       nodes: state.nodes.map((n) =>
         n.id === state.selectedNode?.id
-          ? { ...n, data: { ...n.data, ...data } }
+          ? { ...n, data: { ...n.data, ...data, params: {...state.selectedNode.data.params, ...data.params} } }
           : n
       ),
     }));

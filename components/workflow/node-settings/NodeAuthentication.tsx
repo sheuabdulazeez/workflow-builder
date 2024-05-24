@@ -35,18 +35,27 @@ function NodeAuthentication() {
       getNodeInfo: state.getNodeInfo,
     })
   );
-  const { icon: Icon, displayName, name } = getNodeInfo(selectedNode?.data.api!)!;
+  const {
+    icon: Icon,
+    displayName,
+    name,
+  } = getNodeInfo(selectedNode?.data.api!)!;
 
-  const availableAuthentications = useQuery(
-    api.authentication.getAuthenticationsByNode,
-    {ownerId: user!.id, node: name }
-  )??[];
+  const availableAuthentications =
+    useQuery(api.authentication.getAuthenticationsByNode, {
+      ownerId: user!.id,
+      node: name,
+    }) ?? [];
 
-
-  const selectedAuthentication = availableAuthentications.find(auth => auth._id === selectedNode!.data.authenticationId!);
+  const selectedAuthentication = availableAuthentications.find(
+    (auth) => auth._id === selectedNode!.data.authenticationId!
+  );
 
   return (
-    <AccordionItem value="authentication">
+    <AccordionItem
+      value="authentication"
+      disabled={!selectedNode?.data.api || !selectedNode.data.event}
+    >
       <AccordionTrigger className="!no-underline !text-lg">
         Authentication
       </AccordionTrigger>
@@ -58,8 +67,12 @@ function NodeAuthentication() {
             </span>
             {selectedAuthentication ? (
               <div className="flex flex-col w-full">
-                <span className="truncate text-sm">{selectedAuthentication.name}</span>
-                <span className="truncate text-muted-foreground text-xs">{selectedAuthentication.accountName}</span>
+                <span className="truncate text-sm">
+                  {selectedAuthentication.name}
+                </span>
+                <span className="truncate text-muted-foreground text-xs">
+                  {selectedAuthentication.accountName}
+                </span>
               </div>
             ) : (
               <span>Connect {displayName}</span>
@@ -92,8 +105,10 @@ function NodeAuthentication() {
                           }
                         />
                         <div>
-                        {option.name}
-                        <div className="text-muted-foreground text-xs">{option.accountName}</div>
+                          {option.name}
+                          <div className="text-muted-foreground text-xs">
+                            {option.accountName}
+                          </div>
                         </div>
                       </CommandItem>
                     ))}
@@ -101,8 +116,10 @@ function NodeAuthentication() {
                       onSelect={() => {
                         // TODO: Open a new window and redirect user to authenticate a new account
                       }}
-                     className=" text-center items-center justify-center shadow-md mt-5 p-2 gap-2">
-                     <Plus className="text-muted-foreground" size={15} /> Connect a new account
+                      className=" text-center items-center justify-center shadow-md mt-5 p-2 gap-2"
+                    >
+                      <Plus className="text-muted-foreground" size={15} />{" "}
+                      Connect a new account
                     </CommandItem>
                   </CommandGroup>
                 </Command>

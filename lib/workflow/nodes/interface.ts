@@ -36,7 +36,6 @@ export interface INodeDescription {
     name: string;
     type: "oauth" | "api_key";
   };
-  properties?: INodeDescriptionProperties[];
 }
 
 export interface INodeDescriptionEvent {
@@ -44,6 +43,7 @@ export interface INodeDescriptionEvent {
   name: string;
   type: EventType;
   description: string;
+  fields?: INodeDescriptionProperties[];
 }
 
 interface INodeDescriptionPropertyType {
@@ -60,9 +60,9 @@ export interface INodeDescriptionProperties {
   displayName: string;
   name: string;
   type: INodeDescriptionPropertyType;
-  description: string;
+  description?: string;
   required: boolean;
-  defaultValue: string | boolean | number;
+  defaultValue?: string | boolean | number;
   options?: Option[];
   optionsMethod?: string;
 }
